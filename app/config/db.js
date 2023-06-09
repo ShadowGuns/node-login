@@ -1,8 +1,8 @@
 module.exports ={
-    HOST: "arjuna",
-    USER: "postgres",
-    PASSWORD: "workhelp1@",
-    DB: "system",
+    HOST: "arjuna.db.elephantsql.com",
+    USER: "swxlxmzn",
+    PASSWORD: "kCoMR-qLBjF_lt_aW54Mn3cPSIpfXENh",
+    DB: "swxlxmzn",
     dialect: "postgres",
     pool: {
         max: 5,

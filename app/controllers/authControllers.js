@@ -56,3 +56,25 @@ exports.signin = (req, res) => {
       });
 };
 
+exports.changepassword = (req, res) => {
+  const {currentPassword, newPassword} = req.body;
+  const userId = req.userId;
+  User.findByPk(userId)
+  .then(user => {
+    const isPasswordValid = bcrypt.compareSync(currentPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).send({
+        message: "Invalid Password!"
+      });
+    }
+
+    //Update the user's password
+    user.password = bcrypt.hashSync(newPassword, 8);
+    user.save();
+
+    res.send({ message: "Password was changed successfully!" });
+  })
+  .catch(err => {
+    res.status(500).send({ message: err.message });
+  });
+};

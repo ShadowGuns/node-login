@@ -6,14 +6,30 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,       // Ensure id is not nullable
           },
-        username: {
-            type: Sequelize.STRING
+        name: {
+            type: Sequelize.STRING,
+            allowNull: false
         },
         email: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false,       // Ensure email is not nullable
+            unique: true            // Ensure email is unique
         },
         password:{
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        verified:{
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
+        },
+        email_verify_token:{
+            type: Sequelize.STRING,
+            defaultValue: ''
+        },
+        forgot_password_token:{
+            type: Sequelize.STRING,
+            defaultValue: ''
         }
     });
     return User;

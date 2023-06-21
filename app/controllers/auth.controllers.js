@@ -8,7 +8,7 @@ var bcrypt = require("bcryptjs");
 exports.signup = (req, res) => {
     // Save User to Database
     User.create({
-        username: req.body.username,
+        name: req.body.name,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8)
     })
@@ -23,7 +23,7 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
     User.findOne({
       where: {
-        username: req.body.username
+        email: req.body.email
       }
     })
       .then(user => {
@@ -43,7 +43,7 @@ exports.signin = (req, res) => {
           });
         }
         var token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400 // 24 hours
+            expiresIn: '90d' // 24 hours
           });
 
         res.status(200).send({

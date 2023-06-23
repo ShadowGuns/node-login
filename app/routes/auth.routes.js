@@ -19,6 +19,8 @@ module.exports = function(app){
         controller.signin
     );
     app.put("/api/auth/changepassword", [verifyToken], controller.changepassword);
+    app.post("/api/auth/forgot-password", controller.forgotPassword);
+    app.post("/api/auth/reset-password", [verifyToken], controller.resetPassword)
     app.delete('/api/auth/delete-account', [verifyToken], controller.deleteAccount);
 };
 

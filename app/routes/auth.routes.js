@@ -18,6 +18,7 @@ module.exports = function(app){
         ], 
         controller.signin
     );
+    app.get("/api/oauth/google", controller.oauthGoogle);
     app.put("/api/auth/changepassword", [verifyToken], controller.changepassword);
     app.post("/api/auth/forgot-password", controller.forgotPassword);
     app.post("/api/auth/reset-password", [verifyToken], controller.resetPassword)

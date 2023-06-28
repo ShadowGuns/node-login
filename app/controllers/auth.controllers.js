@@ -1,6 +1,8 @@
 const db = require("../models");
 const config = require("../config/auth");
 const User = db.user;
+const { OAuth2Client } = require('google-auth-library')
+const usersService = require('../services/users.services');
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
@@ -20,7 +22,7 @@ exports.signup = (req, res) => {
       user.save();
         res.send({ 
           message: "User was registered successfully!", 
-        email_verify_token: email_verify_token 
+          email_verify_token: email_verify_token 
       });
     })
     .catch(err => {
@@ -76,6 +78,13 @@ exports.signin = (req, res) => {
       .catch(err=>{
         res.status(500).send({ message: err.message });
       });
+};
+
+exports.oauthGoogle = async (req, res) => {
+  const { code } = req.query
+  const result = await usersService.oauth(code)
+  const urlRedirect = `${config.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}`
+  return res.redirect(urlRedirect)
 };
 
 exports.changepassword = (req, res) => {

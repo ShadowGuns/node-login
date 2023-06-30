@@ -19,8 +19,7 @@ const verifyToken = async (req, res, next) => {
     // Perform a database check to verify the token
     const user = await User.findOne({
       where: {
-        id: userId,
-        forgot_password_token: token
+        id: userId
       }
     });
 

@@ -1,11 +1,11 @@
 const db = require("../models");
 const config = require("../config/auth");
 const User = db.user;
-const { OAuth2Client } = require('google-auth-library')
+const Urls = db.urls;
 const usersService = require('../services/users.services');
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
     // Save User to Database
@@ -202,3 +202,48 @@ exports.deleteAccount = async (req, res) => {
     res.status(500).send({ message: 'An error occurred while deleting the account' });
   }
 };
+
+function generateRandomCode() {
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=';
+  const length = 4;
+  let code = '';
+
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters.charAt(randomIndex);
+  }
+
+  return code;
+}
+
+exports.generateUrl = async (req, res) => {
+  const {url} = req.body;
+  try{
+    let code = generateRandomCode();
+    let existingCode = await Urls.findOne({ where: { code: code } });
+    while (existingCode) {
+      code = generateRandomCode();
+      existingCode = await Urls.findOne({ where: { code: code } });
+    }
+    await Urls.create({
+      code: code,
+      url: url
+    });
+    res.json({ code: code });
+  } catch(error){
+    res.status(500).json({ error: error.message });
+  }
+}
+
+exports.getUrl = async (req, res) => {
+  const code = req.params.code;
+  try{
+    const url = await Urls.findOne({ where: { code: code } });
+    if(!url){
+      return res.status(404).json({ error: 'Url not found' });
+    }
+    res.json({ url: url.url });
+  } catch(error){
+    res.status(500).json({ error: error.message });
+  }
+}
